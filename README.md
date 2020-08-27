@@ -3,5 +3,5 @@
 
 
 [Home Wiki](../../wiki/home)
-[Vision Statements Wiki](../../wiki/visionstatements)
+[Vision Statements Wiki](../../wiki/vision-statements)
 [Requirements Wiki](../../wiki/requirements)
