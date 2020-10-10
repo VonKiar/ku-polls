@@ -1,33 +1,29 @@
 import datetime
-
 from django.test import TestCase
 from django.utils import timezone
-
 from .models import Question
 from django.urls import reverse
 
-
 class QuestionModelTests(TestCase):
-    """Test case for question."""
+    """Question model testcases."""
 
     def test_was_published_recently_with_future_question(self):
-        """was_published_recently() returns False for questions whose pub_date is in the future."""
+        """Question with future published date should return false."""
         time = timezone.now() + datetime.timedelta(days=30)
         future_question = Question(pub_date=time)
         self.assertIs(future_question.was_published_recently(), False)
 
     def test_was_published_recently_with_old_question(self):
-        """was_published_recently() returns False for questions whose pub_date is older than 1 day."""
+        """Question with published date older than one day should return false."""
         time = timezone.now() - datetime.timedelta(days=1, seconds=1)
         old_question = Question(pub_date=time)
         self.assertIs(old_question.was_published_recently(), False)
 
     def test_was_published_recently_with_recent_question(self):
-        """was_published_recently() returns True for questions whose pub_date is within the last day."""
+        """Question with published day of within a day should return true."""
         time = timezone.now() - datetime.timedelta(hours=23, minutes=59, seconds=59)
         recent_question = Question(pub_date=time)
         self.assertIs(recent_question.was_published_recently(), True)
-
 
 def create_question(question_text, days):
     """
@@ -38,9 +34,8 @@ def create_question(question_text, days):
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text, pub_date=time)
 
-
 class QuestionIndexViewTests(TestCase):
-    """Test case for redirect and response."""
+    """Testcases for responses and redirections."""
 
     def test_no_questions(self):
         """If no questions exist, an appropriate message is displayed."""
@@ -94,18 +89,19 @@ class QuestionIndexViewTests(TestCase):
             ['<Question: Past question 2.>', '<Question: Past question 1.>']
         )
 
-
 class PublishedTimeTests(TestCase):
-    """Test time for poll model."""
+    """Testcases for time setting."""
 
     def test_is_published(self):
-        """Test that the poll has been published."""
+        """Test published poll."""
         time = timezone.now() - datetime.timedelta(days=1)
-        question = Question(pub_date=time)
-        self.assertTrue(question.is_published())
+        q = Question(pub_date=time)
+        # Should be true if the question is published.
+        self.assertTrue(q.is_published())
 
     def test_can_vote(self):
-        """Test that the poll can vote or not."""
+        """Test poll's availability."""
         time = timezone.now() - datetime.timedelta(days=1)
-        question = Question(pub_date=time)
-        self.assertTrue(question.can_vote())
+        q = Question(pub_date=time)
+        # Should be true if the question is available.
+        self.assertTrue(q.can_vote())
